@@ -12,16 +12,17 @@ const Todo = () => {
   const [inputValue, setInputValue] = useState({ title: "", desc: "" });
   const [arrayValue, setArrayValue] = useState([]);
   const [value, setValue] = useState(false);
+  const idUser = sessionStorage.getItem('id')
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setInputValue({ ...inputValue, [name]: value , userID : '65f04514b974753c220b5df8' });
+    setInputValue({ ...inputValue, [name]: value , userID : idUser });
   };
 
   useEffect(() => {
     const getData = async () => {  
       try {
-        const res = await axios.get(BASEURL+TODOGET_ENDPOINT+"65f04514b974753c220b5df8");
+        const res = await axios.get(BASEURL+TODOGET_ENDPOINT+idUser);
         setArrayValue(res.data.data); 
       } catch (err) {
         console.log(err); 
