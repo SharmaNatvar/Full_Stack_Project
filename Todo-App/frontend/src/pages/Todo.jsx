@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FaWindowClose } from "react-icons/fa";
+import axios from "axios";
+import { BASEURL, TODODELETE_ENDPOINT, TODOGET_ENDPOINT, TODOPOST_ENDPOINT, TODOPUT_ENDPOINT } from "../api";
 
 
 const Todo = () => {
@@ -13,17 +15,36 @@ const Todo = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setInputValue({ ...inputValue, [name]: value });
+    setInputValue({ ...inputValue, [name]: value , userID : '65f04514b974753c220b5df8' });
   };
 
-  const handleSumbit = () => {
-    if (inputValue.title !== "" && inputValue.desc !== "") {
-      setArrayValue([...arrayValue, inputValue]);
-      setInputValue({ title: "", desc: "" });
-      toast.success("Success Add !");
-      toast.error("Task Not Save ! please Login");
-    } else {
-      toast.error("fill the form");
+  useEffect(() => {
+    const getData = async () => {  
+      try {
+        const res = await axios.get(BASEURL+TODOGET_ENDPOINT+"65f04514b974753c220b5df8");
+        setArrayValue(res.data.data); 
+      } catch (err) {
+        console.log(err); 
+      }
+    };
+  
+    getData();
+  }, []);
+console.log(inputValue);
+
+  const handleSumbit = async() => {
+    try {
+      if (inputValue.title !== "" && inputValue.desc !== "") {
+        const res = await axios.post(BASEURL+ TODOPOST_ENDPOINT,inputValue)
+        setArrayValue([...arrayValue, inputValue]);
+        console.log(arrayValue);
+        setInputValue({ title: "", desc: "" });
+        toast.success("Success Add !");
+      } else {
+        toast.error("fill the form");
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -33,14 +54,10 @@ const Todo = () => {
     setInputValue(e);
   };
 
-  const handleUpdateBtn = (e) => {
-    e.preventDefault()
-    // const updateValue =
-    console.log(inputValue, "inputValue line 38");
+  const handleUpdateBtn = async() => {
+    const res = await axios.put(BASEURL+TODOPUT_ENDPOINT+inputValue._id ,inputValue)
     const result = arrayValue.map((e)=>{
-      if(e.title === inputValue.title ){
-        console.log(e.title , 'e.title');
-        console.log(inputValue.title , 'inputValue.title');
+      if(e._id === inputValue._id ){
         return {
           ...e,
           title : inputValue.title,
@@ -55,10 +72,10 @@ const Todo = () => {
     toast.success("Success Update !");
     toast.error("Task Not Save ! please Login");
   };
-  console.log(inputValue, "inputValue");
 
-  const handleDelete = (title) => {
-    setArrayValue(arrayValue.filter((e) => e.title !== title));
+  const handleDelete = (id) => {
+    const res = axios.delete(BASEURL+TODODELETE_ENDPOINT+id )
+    setArrayValue(arrayValue.filter((e) => e._id !== id));
     toast.success("Success Delete !");
   };
 
@@ -68,7 +85,7 @@ const Todo = () => {
       <div className="container" style={{ minheight: "85vh" }}>
         <div className="main-block mb-5">
           {value ? <div className="d-flex align-items-center justify-content-around"><h1>UpDate Todo</h1> <p className="fs-2" onClick={() =>{ setValue(false) , setInputValue({ title: "", desc: "" })}}><FaWindowClose /></p> </div>: <h1>Add Todo</h1>}
-          <form >
+          <div style={{margin:'30px'}}>
             <input
               type="text"
               name="title"
@@ -100,7 +117,7 @@ const Todo = () => {
                 </button>
               )}
             </div>
-          </form>
+          </div>
         </div>
 
         <div className="d-flex gap-3 flex-wrap">
@@ -128,7 +145,7 @@ const Todo = () => {
                       <button
                         className="bg-danger ms-3 cbtn"
                         onClick={() => {
-                          handleDelete(e.title);
+                          handleDelete(e._id);
                         }}
                       >
                         <MdDelete />

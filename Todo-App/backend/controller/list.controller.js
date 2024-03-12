@@ -3,17 +3,19 @@ const { listService } = require("../services");
 const listPost = async (req, res) => {
   try {
     const body = req.body;
-    console.log(body);
+    console.log(body , '0');
     if (!body) {
       throw new Error("data not get");
     }
     const resBody = await listService.createList(body);
-
+    console.log(resBody ,'1');
+    
     if (!resBody) {
       throw new Error("data not created");
     }
-
+    
     const resUser = await listService.findUser(body.userID);
+    console.log(resUser ,'2');
 
     if (!resUser) {
       throw new Error(" user not found");
@@ -34,6 +36,8 @@ const listPost = async (req, res) => {
   }
 };
 
+
+
 const listGet = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -41,6 +45,7 @@ const listGet = async (req, res) => {
       throw new Error("data not get");
     }
     const resBody = await listService.getList(userId);
+    // console.log(resBody ,'resBody');
     if (!resBody) {
       throw new Error("user not found");
     }

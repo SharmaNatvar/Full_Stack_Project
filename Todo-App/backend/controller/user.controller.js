@@ -5,12 +5,10 @@ const bcrypt = require("bcrypt");
 const registerUser = async (req, res) => {
   try {
     const { email, userName, password } = req.body;
-    console.log(email, userName, password);
     // bcrypt
     const saltRounds = 10;
     const hashPassword = bcrypt.hashSync(password, saltRounds);
     const body = { email: email, userName: userName, password: hashPassword };
-    console.log(body, "body");
     if (!body) {
       throw new Error("data not get");
     }
@@ -20,7 +18,6 @@ const registerUser = async (req, res) => {
     }
     res.status(201).json({
       message: "sucsess",
-      data: resBody,
     });
   } catch (err) {
     res.status(400).json({

@@ -29,7 +29,7 @@ const Nav = () => {
               </li>
             </ul>
             <div>
-              <h4 className="btn btn-outline-danger m-0" onClick={()=>navigate('/')}>LogOut</h4>
+              <h4 className="btn btn-outline-danger m-0" onClick={()=>{navigate('/'); sessionStorage.removeItem('id')}}>LogOut</h4>
             </div>
           </div>
         </div>
