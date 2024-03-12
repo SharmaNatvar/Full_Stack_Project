@@ -1,4 +1,5 @@
 import React from "react";
+import Footer from "../component/Footer";
 
 const Home = () => {
   return (
@@ -12,6 +13,7 @@ const Home = () => {
         </p>
         </div>
       </div>
+      <Footer/>
     </>
   );
 };

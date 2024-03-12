@@ -45,10 +45,10 @@ const SignPage = () => {
                }
               </div>
 {
-  value?            <button type="submit" className="btn btn-primary">
+  value?            <button type="submit" className="btn btn-primary cbtn">
               Submit
             </button>:
-            <button type="submit" className="btn btn-primary">
+            <button type="submit" className="btn btn-primary cbtn">
               Create
             </button>
 }

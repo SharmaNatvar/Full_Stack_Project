@@ -5,7 +5,7 @@ import About from './pages/About'
 import Todo from './pages/Todo'
 import Nav from './component/Nav'
 import SignPage from './component/SignPage'
-import Footer from './component/Footer'
+import NotFound from './pages/NotFound'
 
 function App() {
 
@@ -17,8 +17,8 @@ function App() {
         <Route path='/home' element={<Home/>}/>
         <Route path='/about' element={<About/>}/>
         <Route path='/todo' element={<Todo/>}/>
+        <Route path='*' element={<NotFound/>}/>
       </Routes>
-      <Footer/>
     </>
   )
 }

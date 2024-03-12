@@ -1,4 +1,5 @@
 import React from 'react'
+import Footer from '../component/Footer'
 
 const About = () => {
   return (
@@ -16,6 +17,7 @@ const About = () => {
         </p>
         </div>
       </div>
+      <Footer/>
     </>
   )
 }

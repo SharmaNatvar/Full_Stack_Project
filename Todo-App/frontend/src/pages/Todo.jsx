@@ -1,30 +1,74 @@
 import React, { useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { FaWindowClose } from "react-icons/fa";
+
 
 const Todo = () => {
-  const [inputValue, setInputValue] = useState({title:'', desc:''})
-  const [arrayValue, setArrayValue] = useState([])
+  const [inputValue, setInputValue] = useState({ title: "", desc: "" });
+  const [arrayValue, setArrayValue] = useState([]);
+  const [value, setValue] = useState(false);
 
-const handleChange =(e) =>{
-  const {name , value} = e.target
-  setInputValue({...inputValue , [name] : value})
-}
-console.log(inputValue);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setInputValue({ ...inputValue, [name]: value });
+  };
 
+  const handleSumbit = () => {
+    if (inputValue.title !== "" && inputValue.desc !== "") {
+      setArrayValue([...arrayValue, inputValue]);
+      setInputValue({ title: "", desc: "" });
+      toast.success("Success Add !");
+      toast.error("Task Not Save ! please Login");
+    } else {
+      toast.error("fill the form");
+    }
+  };
 
-const handleSumbit = () =>{
-setArrayValue({...arrayValue , ...inputValue})
-setInputValue({title:'', desc:''})
-}
-console.log(arrayValue);
+  const handleUpdte = (e) => {
+    setValue(true);
+    console.log(e, "e");
+    setInputValue(e);
+  };
+
+  const handleUpdateBtn = (e) => {
+    e.preventDefault()
+    // const updateValue =
+    console.log(inputValue, "inputValue line 38");
+    const result = arrayValue.map((e)=>{
+      if(e.title === inputValue.title ){
+        console.log(e.title , 'e.title');
+        console.log(inputValue.title , 'inputValue.title');
+        return {
+          ...e,
+          title : inputValue.title,
+          desc : inputValue.desc
+        }
+      }
+      return e
+    })
+    setArrayValue(result);
+    setValue(false)
+    setInputValue({ title: "", desc: "" });
+    toast.success("Success Update !");
+    toast.error("Task Not Save ! please Login");
+  };
+  console.log(inputValue, "inputValue");
+
+  const handleDelete = (title) => {
+    setArrayValue(arrayValue.filter((e) => e.title !== title));
+    toast.success("Success Delete !");
+  };
 
   return (
     <>
-      <div className="container" style={{ height: "85vh" }}>
-        <div className="main-block">
-          <h1>Add Todo</h1>
-          <form action="/">
+      <ToastContainer />
+      <div className="container" style={{ minheight: "85vh" }}>
+        <div className="main-block mb-5">
+          {value ? <div className="d-flex align-items-center justify-content-around"><h1>UpDate Todo</h1> <p className="fs-2" onClick={() =>{ setValue(false) , setInputValue({ title: "", desc: "" })}}><FaWindowClose /></p> </div>: <h1>Add Todo</h1>}
+          <form >
             <input
               type="text"
               name="title"
@@ -46,28 +90,54 @@ console.log(arrayValue);
 
             <hr />
             <div className="btn-block">
-              <button onClick={handleSumbit}>Submit</button>
+              {value ? (
+                <button className="cbtn" onClick={handleUpdateBtn}>
+                  Update
+                </button>
+              ) : (
+                <button className="cbtn" onClick={handleSumbit}>
+                  Submit
+                </button>
+              )}
             </div>
           </form>
         </div>
 
-        <div className="card" style={{ width: "18rem", marginTop: "4rem" }}>
-          <div className="card-body p-4">
-            <h5 className="card-title">Card title</h5>
+        <div className="d-flex gap-3 flex-wrap">
+          {arrayValue &&
+            arrayValue.map((e, index) => {
+              return (
+                <div
+                  className="card "
+                  style={{ width: "18rem", marginTop: "1rem" }}
+                  key={index}
+                >
+                  <div className="card-body p-4">
+                    <h5 className="card-title">{e.title}</h5>
 
-            <p className="card-text">
-              Some quick example text to build on the card title and make up the
-              bulk of the card's content.
-            </p>
-            <div className="d-flex">
-              <button className="me-3">
-                <FaEdit />
-              </button>
-              <button className="bg-danger ms-3">
-                <MdDelete />
-              </button>
-            </div>
-          </div>
+                    <p className="card-text">{e.desc}</p>
+                    <div className="d-flex">
+                      <button
+                        className="me-3 cbtn"
+                        onClick={() => {
+                          handleUpdte(e, index);
+                        }}
+                      >
+                        <FaEdit />
+                      </button>
+                      <button
+                        className="bg-danger ms-3 cbtn"
+                        onClick={() => {
+                          handleDelete(e.title);
+                        }}
+                      >
+                        <MdDelete />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
         </div>
       </div>
     </>

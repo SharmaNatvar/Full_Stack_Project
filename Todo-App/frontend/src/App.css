@@ -109,7 +109,7 @@ input[type="password"] {
   margin-top: 10px;
   text-align: center;
 }
-button {
+.cbtn {
   width: 100%;
   padding: 10px 0;
   margin: 10px auto;
@@ -120,6 +120,6 @@ button {
   font-weight: 600;
   color: #fff;
 }
-button:hover {
+.cbtn:hover {
   background: #26a9e0;
 }
